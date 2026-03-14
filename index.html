@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>覃宏宇 · Quinn — 从概念到执行的实践者</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1814;
+    --ink-light: #4a4640;
+    --ink-faint: #8a8680;
+    --paper: #f5f2ed;
+    --paper-warm: #ede9e2;
+    --accent: #2952a3;
+    --accent-muted: #c8d4eb;
+    --rule: #d4cfc8;
+    --highlight: #e8b84b;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(245, 242, 237, 0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-left {
+    animation: fadeUp 0.9s ease both;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+  }
+
+  .hero-name-en {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--ink-faint);
+    font-weight: 400;
+    margin-bottom: 2rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--ink-light);
+    line-height: 1.8;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    border-left: 2px solid var(--highlight);
+    padding-left: 1.2rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.75rem 2rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--rule);
+    color: var(--ink-light);
+    padding: 0.75rem 2rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .hero-right {
+    animation: fadeUp 0.9s 0.2s ease both;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .stat-card {
+    background: var(--paper);
+    padding: 2rem 1.8rem;
+    transition: background 0.2s;
+  }
+
+  .stat-card:hover { background: var(--paper-warm); }
+
+  .stat-number {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-number span {
+    color: var(--accent);
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    line-height: 1.4;
+  }
+
+  /* ── SECTION COMMONS ── */
+  section {
+    padding: 6rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1.2rem;
+  }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.15em;
+  }
+
+  h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .project-item {
+    display: grid;
+    grid-template-columns: 3rem 1fr auto;
+    gap: 2rem;
+    align-items: start;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .project-item:first-child { border-top: 1px solid var(--rule); }
+
+  .project-item:hover .project-title { color: var(--accent); }
+
+  .project-index {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    padding-top: 0.3rem;
+  }
+
+  .project-content {}
+
+  .project-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .project-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    transition: color 0.2s;
+    line-height: 1.4;
+  }
+
+  .project-desc {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    line-height: 1.75;
+    max-width: 600px;
+  }
+
+  /* ── EXPAND TOGGLE ── */
+  .project-toggle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-top: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .project-toggle:hover { border-color: var(--accent); }
+  .project-toggle .toggle-arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    font-style: normal;
+  }
+  .project-item.open .toggle-arrow { transform: rotate(90deg); }
+
+  .project-detail {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+    margin-top: 0;
+  }
+  .project-item.open .project-detail {
+    grid-template-rows: 1fr;
+  }
+  .project-detail-inner {
+    overflow: hidden;
+  }
+  .project-detail-body {
+    padding-top: 1.8rem;
+    padding-bottom: 0.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    border-top: 1px solid var(--rule);
+    margin-top: 1.2rem;
+  }
+  .detail-block h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .detail-block ul {
+    list-style: none;
+    padding: 0;
+  }
+  .detail-block ul li {
+    font-size: 0.84rem;
+    color: var(--ink-light);
+    line-height: 1.7;
+    padding: 0.3rem 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .detail-block ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--rule);
+    font-size: 0.75rem;
+  }
+  .detail-block p {
+    font-size: 0.84rem;
+    color: var(--ink-light);
+    line-height: 1.75;
+  }
+  .detail-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-muted);
+    padding-bottom: 0.1rem;
+    margin-top: 0.6rem;
+    transition: border-color 0.2s;
+  }
+  .detail-link:hover { border-color: var(--accent); }
+  .detail-outcomes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .outcome-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    font-size: 0.84rem;
+    color: var(--ink-light);
+  }
+  .outcome-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .project-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+    padding-top: 0.3rem;
+    min-width: 120px;
+  }
+
+  .metric-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    padding: 0.25rem 0.7rem;
+    color: var(--ink-light);
+    white-space: nowrap;
+  }
+
+  /* ── METHODOLOGY ── */
+  .method-section {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 6rem 3rem;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .method-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .method-section .section-header {
+    border-bottom-color: rgba(255,255,255,0.15);
+  }
+
+  .method-section .section-num { color: rgba(255,255,255,0.3); }
+  .method-section h2 { color: var(--paper); }
+
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 4rem;
+  }
+
+  .method-step {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .method-step:hover { background: #2a2620; }
+
+  .method-step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 3rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .method-step-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--paper);
+    margin-bottom: 0.8rem;
+  }
+
+  .method-step-desc {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+  }
+
+  .method-arrow {
+    position: absolute;
+    right: -0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 1rem;
+    z-index: 1;
+  }
+
+  .method-tools {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .tool-group h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .tool-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tool-tag {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.65);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.3rem 0.8rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .tool-tag:hover {
+    border-color: var(--accent-muted);
+    color: var(--paper);
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+    color: var(--ink-light);
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-text p strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .about-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .meta-row {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.85rem;
+  }
+
+  .meta-row:first-child { border-top: 1px solid var(--rule); }
+
+  .meta-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 0.1rem;
+  }
+
+  .meta-val { color: var(--ink-light); }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--rule);
+    padding: 5rem 3rem;
+    text-align: center;
+  }
+
+  .contact-section h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .contact-section p {
+    color: var(--ink-faint);
+    font-size: 0.9rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .contact-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 1.5rem 3rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--rule);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 6rem 1.5rem 3rem;
+      gap: 3rem;
+    }
+
+    section { padding: 4rem 1.5rem; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .method-grid { grid-template-columns: 1fr 1fr; }
+    .method-tools { grid-template-columns: 1fr; gap: 1.5rem; }
+    .project-item { grid-template-columns: 2rem 1fr; }
+    .project-metrics { display: none; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .contact-section { padding: 4rem 1.5rem; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">QHY · Portfolio 2026</div>
+  <ul class="nav-links">
+    <li><a href="#projects">项目</a></li>
+    <li><a href="#method">方法论</a></li>
+    <li><a href="#about">关于我</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div style="max-width:1200px;margin:0 auto;">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">2026届应届生 · 产业服务方向</div>
+      <h1>覃宏宇</h1>
+      <div class="hero-name-en">Quinn · Qin Hongyu</div>
+      <p class="hero-desc">
+        从概念到执行的实践者。六个月B端产业园区服务全流程实战，
+        擅长把模糊需求拆解为可落地的执行路径，
+        熟悉孵化器运营、行业调研、B端活动统筹全链路工作。
+      </p>
+      <div class="hero-cta">
+        <a href="quinn-resume.pdf" class="btn-primary" download>下载简历 PDF</a>
+        <a href="#projects" class="btn-secondary">查看项目</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">5<span>家</span></div>
+          <div class="stat-label">孵化器入驻企业<br>从0到1完成体系搭建</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">230<span>+</span></div>
+          <div class="stat-label">B端行业沙龙报名人数<br>较同类活动热度+15%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">173<span>→88%</span></div>
+          <div class="stat-label">独立设计公摊率<br>优化方案获双方认可</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100<span>+</span></div>
+          <div class="stat-label">AI+教育供需对接会<br>高校与企业参与人数</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2>标杆项目</h2>
+  </div>
+
+  <div class="projects-list">
+
+    <!-- PROJECT 01 -->
+    <div class="project-item reveal" onclick="toggleProject(this)">
+      <div class="project-index">01</div>
+      <div class="project-content">
+        <div class="project-tag">孵化器运营 · 空间规划 · 招商体系</div>
+        <div class="project-title">创+孵化器：从空白空间到可运营载体</div>
+        <div class="project-desc">
+          无任何历史模板参考，3个月内独立完成运营基础体系搭建。核心挑战：公摊率高达173%，独立设计计费面积优化方案，直接推动二期项目启动。
+        </div>
+        <div class="project-toggle"><i class="toggle-arrow">▶</i> 查看项目详情</div>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-detail-body">
+              <div class="detail-block">
+                <h4>核心工作</h4>
+                <ul>
+                  <li>识别公摊率173%的核心障碍，独立设计计费面积优化方案，将运营功能区从公摊体系剥离，公摊率降至88%，获经理与入驻企业双方认可</li>
+                  <li>完成孵化器入驻协议起草（AI辅助起草、人工逐条校正），梳理核心条款与全流程规范</li>
+                  <li>撰写官方招商推文，跟进10+项场地整改从提出到验收全流程</li>
+                  <li>整理空间功能说明，制作软装采购清单（含品类、价位、渠道）</li>
+                </ul>
+              </div>
+              <div class="detail-block">
+                <h4>项目成果</h4>
+                <div class="detail-outcomes">
+                  <div class="outcome-item"><span class="outcome-num">5家</span>初创企业顺利入驻</div>
+                  <div class="outcome-item"><span class="outcome-num">173→88%</span>公摊率优化，获双方认可</div>
+                  <div class="outcome-item"><span class="outcome-num">3个月</span>完成从零搭建</div>
+                  <div class="outcome-item"><span class="outcome-num">1000+</span>官方招商推文阅读量</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-metrics">
+        <div class="metric-pill">5家企业入驻</div>
+        <div class="metric-pill">公摊率 173→88%</div>
+        <div class="metric-pill">3个月完成</div>
+      </div>
+    </div>
+
+    <!-- PROJECT 02 -->
+    <div class="project-item reveal" onclick="toggleProject(this)">
+      <div class="project-index">02</div>
+      <div class="project-content">
+        <div class="project-tag">行业调研 · 报告撰写 · 策略输出</div>
+        <div class="project-title">「AI+教育」赛道调研：从一线洞察到行业落地</div>
+        <div class="project-desc">
+          独立划定赛道边界，设计结构化访谈框架；5家企业深度走访，识别三大核心痛点，调研方案被集团采纳，推动供需对接会落地。
+        </div>
+        <div class="project-toggle"><i class="toggle-arrow">▶</i> 查看项目详情</div>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-detail-body">
+              <div class="detail-block">
+                <h4>核心工作</h4>
+                <ul>
+                  <li>独立划定赛道边界，输出涵盖企业画像、产品逻辑、增长瓶颈的结构化访谈提纲</li>
+                  <li>参与5家代表性企业实地走访，与技术、业务负责人深度访谈，独立完成录音整理、需求建模与痛点提炼</li>
+                  <li>识别技术变现难、规模增长受限、数据资产沉睡三大行业核心问题</li>
+                  <li>独立撰写完整调研报告，设计「资源-能力-政策」三维服务方案</li>
+                </ul>
+              </div>
+              <div class="detail-block">
+                <h4>项目成果</h4>
+                <div class="detail-outcomes">
+                  <div class="outcome-item"><span class="outcome-num">被采纳</span>核心建议获集团采纳</div>
+                  <div class="outcome-item"><span class="outcome-num">近100人</span>AI+教育供需对接会落地</div>
+                  <div class="outcome-item"><span class="outcome-num">5家</span>代表性企业深度走访</div>
+                </div>
+                <a href="https://www.xmcu.edu.cn/info/1187/10526.htm" target="_blank" class="detail-link" onclick="event.stopPropagation()">↗ 供需对接会相关报道</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-metrics">
+        <div class="metric-pill">方案被集团采纳</div>
+        <div class="metric-pill">5家企业走访</div>
+        <div class="metric-pill">近100人对接会</div>
+      </div>
+    </div>
+
+    <!-- PROJECT 03 -->
+    <div class="project-item reveal" onclick="toggleProject(this)">
+      <div class="project-index">03</div>
+      <div class="project-content">
+        <div class="project-tag">活动统筹 · 现场协调 · 应急处理</div>
+        <div class="project-title">「金海豚奖」48小时游戏开发大赛：全程零中断</div>
+        <div class="project-desc">
+          担任现场核心协调人，赛前全场景风险排查，全程处理15+突发问题，保障活动零中断，满意度95%+。
+        </div>
+        <div class="project-toggle"><i class="toggle-arrow">▶</i> 查看项目详情</div>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-detail-body">
+              <div class="detail-block">
+                <h4>核心工作</h4>
+                <ul>
+                  <li>赛前联动承办方、场地方完成网络、电力、设备等全基础条件排查与预案准备</li>
+                  <li>48小时赛事全程实时响应，处理技术故障、物资需求、流程冲突等15+突发问题</li>
+                  <li>全程记录关键节点，完成赛后复盘素材整理</li>
+                </ul>
+              </div>
+              <div class="detail-block">
+                <h4>项目成果</h4>
+                <div class="detail-outcomes">
+                  <div class="outcome-item"><span class="outcome-num">零中断</span>48小时赛事全程保障</div>
+                  <div class="outcome-item"><span class="outcome-num">95%+</span>参赛团队满意度</div>
+                  <div class="outcome-item"><span class="outcome-num">15+</span>突发问题高效处理</div>
+                </div>
+                <a href="https://mp.weixin.qq.com/s/T3DIC_gIw5tlx39NleQg2Q" target="_blank" class="detail-link" onclick="event.stopPropagation()">↗ 活动公众号推文</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-metrics">
+        <div class="metric-pill">活动零中断</div>
+        <div class="metric-pill">满意度 95%+</div>
+        <div class="metric-pill">15+ 突发处理</div>
+      </div>
+    </div>
+
+    <!-- PROJECT 04 -->
+    <div class="project-item reveal" onclick="toggleProject(this)">
+      <div class="project-index">04</div>
+      <div class="project-content">
+        <div class="project-tag">B端活动运营 · 华为云对接 · 数据分析</div>
+        <div class="project-title">华为游戏行业沙龙：报名系统设计与全流程运营</div>
+        <div class="project-desc">
+          负责线上报名子系统设计与运营，全程对接华为云负责人。活动报名230+人，较同类活动热度+15%。
+        </div>
+        <div class="project-toggle"><i class="toggle-arrow">▶</i> 查看项目详情</div>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-detail-body">
+              <div class="detail-block">
+                <h4>核心工作</h4>
+                <ul>
+                  <li>参与活动方案策划，设计报名与签到全流程</li>
+                  <li>负责线上报名子系统设计与运营</li>
+                  <li>全程对接华为云方面活动负责人，处理筹办到现场的各类即时问题</li>
+                  <li>赛后完成报名数据结构化分析与复盘报告</li>
+                </ul>
+              </div>
+              <div class="detail-block">
+                <h4>项目成果</h4>
+                <div class="detail-outcomes">
+                  <div class="outcome-item"><span class="outcome-num">230+</span>活动累计报名人数</div>
+                  <div class="outcome-item"><span class="outcome-num">+15%</span>较同类活动热度提升</div>
+                  <div class="outcome-item"><span class="outcome-num">零事故</span>现场流程零重大事故</div>
+                </div>
+                <a href="https://mp.weixin.qq.com/s/KcPUNFj0d-GvO_rxgd8TQg" target="_blank" class="detail-link" onclick="event.stopPropagation()">↗ 活动公众号推文</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-metrics">
+        <div class="metric-pill">230+ 报名</div>
+        <div class="metric-pill">热度 +15%</div>
+        <div class="metric-pill">华为云对接</div>
+      </div>
+    </div>
+
+    <!-- PROJECT 05 -->
+    <div class="project-item reveal" onclick="toggleProject(this)">
+      <div class="project-index">05</div>
+      <div class="project-content">
+        <div class="project-tag">产业研究 · 结构化分析 · 战略文件</div>
+        <div class="project-title">厦门软件园产业研究报告：独立撰写人</div>
+        <div class="project-desc">
+          从零搭建「定义—链条—趋势—案例—对标—建议」分析框架，覆盖5大重点产业，报告作为部门季度材料用于园区展示与企业交流。
+        </div>
+        <div class="project-toggle"><i class="toggle-arrow">▶</i> 查看项目详情</div>
+        <div class="project-detail">
+          <div class="project-detail-inner">
+            <div class="project-detail-body">
+              <div class="detail-block">
+                <h4>核心工作</h4>
+                <ul>
+                  <li>独立搭建「定义—链条—趋势—案例—对标—建议」分析框架</li>
+                  <li>系统研究园区大数据、人工智能等5大重点产业，梳理"技术链-应用链-商业链"发展逻辑</li>
+                  <li>整合产业核心规模数据，横向对标国内先进园区</li>
+                  <li>诊断园区发展短板，提出差异化发展路径建议</li>
+                </ul>
+              </div>
+              <div class="detail-block">
+                <h4>项目成果</h4>
+                <div class="detail-outcomes">
+                  <div class="outcome-item"><span class="outcome-num">5大</span>重点产业完整覆盖</div>
+                  <div class="outcome-item"><span class="outcome-num">季度材料</span>用于园区展示与企业交流</div>
+                  <div class="outcome-item"><span class="outcome-num">独立完成</span>从框架设计到最终输出</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-metrics">
+        <div class="metric-pill">5大重点产业</div>
+        <div class="metric-pill">部门季度材料</div>
+        <div class="metric-pill">独立撰写</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- METHOD -->
+<div class="method-section" id="method">
+  <div class="method-inner">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2>工作方法论</h2>
+    </div>
+
+    <div class="method-grid">
+      <div class="method-step reveal">
+        <div class="method-step-num">01</div>
+        <div class="method-step-title">明确问题</div>
+        <div class="method-step-desc">识别核心挑战与目标，从模糊任务中提炼可操作的问题定义</div>
+        <div class="method-arrow">→</div>
+      </div>
+      <div class="method-step reveal">
+        <div class="method-step-num">02</div>
+        <div class="method-step-title">搭建框架</div>
+        <div class="method-step-desc">构建解决问题的结构和方法，无模板环境下独立设计执行路径</div>
+        <div class="method-arrow">→</div>
+      </div>
+      <div class="method-step reveal">
+        <div class="method-step-num">03</div>
+        <div class="method-step-title">填充细节</div>
+        <div class="method-step-desc">向框架中添加具体内容和数据，完成从骨架到可交付产出的转化</div>
+        <div class="method-arrow">→</div>
+      </div>
+      <div class="method-step reveal">
+        <div class="method-step-num">04</div>
+        <div class="method-step-title">执行迭代</div>
+        <div class="method-step-desc">实施方案并持续优化改进，沉淀可复用模板支撑后续工作</div>
+      </div>
+    </div>
+
+    <div class="method-tools">
+      <div class="tool-group reveal">
+        <h3>AI 效率工具</h3>
+        <div class="tool-tags">
+          <span class="tool-tag">大模型起草润色</span>
+          <span class="tool-tag">结构化整理</span>
+          <span class="tool-tag">调研分析辅助</span>
+          <span class="tool-tag">工作流嵌入</span>
+        </div>
+      </div>
+      <div class="tool-group reveal">
+        <h3>知识管理 & 输出</h3>
+        <div class="tool-tags">
+          <span class="tool-tag">Notion</span>
+          <span class="tool-tag">WPS</span>
+          <span class="tool-tag">Canva</span>
+          <span class="tool-tag">数据可视化</span>
+        </div>
+      </div>
+      <div class="tool-group reveal">
+        <h3>语言能力</h3>
+        <div class="tool-tags">
+          <span class="tool-tag">英语六级</span>
+          <span class="tool-tag">粤语流利</span>
+          <span class="tool-tag">普通话</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2>关于我</h2>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>
+        2026届财政学应届生，六个月内在厦门创新软件园完成从孵化器运营到行业调研、从活动统筹到战略文件撰写的完整B端产业服务实践。
+      </p>
+      <p>
+        <strong>核心能力在于：</strong>接到模糊任务时，能快速划定边界、搭建框架、推动落地——不需要等模板，能自己造工具。
+      </p>
+      <p>
+        目标方向是行业运营、产业项目管理、B端客户成功和产业研究，希望将园区积累的"从概念到落地"全流程经验，应用于更广阔的业务场景。
+      </p>
+    </div>
+
+    <div class="about-meta reveal">
+      <div class="meta-row">
+        <div class="meta-key">院校</div>
+        <div class="meta-val">集美大学诚毅学院 · 财政学</div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-key">毕业年份</div>
+        <div class="meta-val">2026届应届</div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-key">实习经历</div>
+        <div class="meta-val">厦门创新软件园管理有限公司<br>企业服务实习生 · 6个月</div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-key">目标城市</div>
+        <div class="meta-val">广州 · 深圳 · 珠海 · 佛山</div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-key">求职方向</div>
+        <div class="meta-val">行业运营 · 产业项目管理<br>产业研究 · B端活动运营</div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-key">奖项</div>
+        <div class="meta-val">第三届全国ETF模拟投资菁英挑战赛优秀奖</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<div class="contact-section" id="contact">
+  <h2>期待与你交流</h2>
+  <p>如果你的团队需要一个能把模糊任务变成可交付结果的人，欢迎联系</p>
+  <div class="contact-links">
+    <a href="/cdn-cgi/l/email-protection#7706021e19281f0e374641445914181a" class="contact-link">
+      <span>✉</span> <span class="__cf_email__" data-cfemail="daabafb3b485b2a39aebece9f4b9b5b7">[email&#160;protected]</span>
+    </a>
+    <a href="tel:18507748074" class="contact-link">
+      <span>☏</span> 185-0774-8074
+    </a>
+    <a href="https://linkedin.com/in/quinn-qin" target="_blank" class="contact-link">
+      <span>in</span> linkedin.com/in/quinn-qin
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>覃宏宇 · Quinn Qin · 2026</p>
+  <p>Jimei University Chengyi College · Public Finance</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Project expand/collapse
+  function toggleProject(item) {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.project-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>

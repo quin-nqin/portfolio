@@ -152,18 +152,25 @@
     padding-left: 1.2rem;
   }
 
-  .btn-secondary {
-    border: 1px solid var(--rule);
-    color: var(--ink-light);
-    padding: 0.75rem 2rem;
-    font-size: 0.82rem;
-    letter-spacing: 0.1em;
-    text-decoration: none;
+  .pdf-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     font-family: 'DM Mono', monospace;
-    transition: border-color 0.2s, color 0.2s;
-    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.15rem;
+    margin-top: 1.8rem;
+    transition: color 0.2s, border-color 0.2s;
   }
-  .btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
+  .pdf-download:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
 
   .article-body { animation: fadeUp 0.8s 0.1s ease both; }
 
@@ -360,7 +367,7 @@
       [导言：用1-3句话概括这篇文章的核心内容。这段话会同步显示在主页卡片和文章列表页的摘要区域。]
     </p>
     <!-- PDF 下载按钮：将 [文件名] 替换为与 HTML 文件相同的名称 -->
-    <a href="pdfs/[文件名].pdf" class="btn-secondary" download style="margin-top:1.5rem; display:inline-block; font-size:0.78rem;">↓ 下载 PDF</a>
+    <a href="pdfs/[文件名].pdf" class="pdf-download" download>↓ 下载 PDF</a>
   </header>
 
   <div class="article-body">

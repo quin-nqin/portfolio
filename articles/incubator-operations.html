@@ -300,6 +300,26 @@
     gap: 1rem;
   }
 
+  .pdf-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.15rem;
+    margin-top: 1.8rem;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .pdf-download:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
   .back-link {
     font-family: 'DM Mono', monospace;
     font-size: 0.72rem;
@@ -370,7 +390,7 @@
     <p class="article-lead">
       当我接到这个任务时，手边没有任何模板，没有前任留下的文档，甚至连清晰的职责边界都不存在。摆在我面前的，是一个空荡荡的孵化器空间和一个模糊的指令："把这里运营起来。"那三个月，我从零开始，独立设计了入驻协议、招商体系、场地整改流程和软装采购方案——并在此过程中解决了一个本可以直接搁置的棘手问题：公摊率173%。
     </p>
-    <a href="pdfs/incubator-operations.pdf" class="btn-secondary" download style="margin-top:1.5rem; display:inline-block; font-size:0.78rem;">↓ 下载 PDF</a>
+    <a href="pdfs/incubator-operations.pdf" class="pdf-download" download>↓ 下载 PDF</a>
   </header>
 
   <div class="article-body">

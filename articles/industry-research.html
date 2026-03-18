@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>结构化调研方法论 · 覃宏宇 Quinn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1814;
+    --ink-light: #4a4640;
+    --ink-faint: #8a8680;
+    --paper: #f5f2ed;
+    --paper-warm: #ede9e2;
+    --accent: #2952a3;
+    --accent-muted: #c8d4eb;
+    --rule: #d4cfc8;
+    --highlight: #e8b84b;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(245, 242, 237, 0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-logo:hover { color: var(--accent); }
+
+  .nav-back {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--accent); }
+
+  /* ── ARTICLE LAYOUT ── */
+  .article-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 9rem 3rem 6rem;
+  }
+
+  /* ── ARTICLE HEADER ── */
+  .article-header {
+    margin-bottom: 3.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--rule);
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .article-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .article-eyebrow-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-muted);
+    padding: 0.2rem 0.6rem;
+  }
+
+  .article-eyebrow-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+  }
+
+  .article-h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.2rem;
+  }
+
+  .article-lead {
+    font-size: 1rem;
+    color: var(--ink-light);
+    line-height: 1.85;
+    border-left: 2px solid var(--highlight);
+    padding-left: 1.2rem;
+  }
+
+  /* ── ARTICLE BODY ── */
+  .article-body {
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .article-body h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+    letter-spacing: -0.01em;
+  }
+
+  .article-body h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .article-body p {
+    font-size: 0.95rem;
+    color: var(--ink-light);
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+  }
+
+  .article-body p strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .article-body ul, .article-body ol {
+    padding-left: 0;
+    list-style: none;
+    margin-bottom: 1.2rem;
+  }
+
+  .article-body ul li, .article-body ol li {
+    font-size: 0.93rem;
+    color: var(--ink-light);
+    line-height: 1.8;
+    padding: 0.3rem 0 0.3rem 1.2rem;
+    position: relative;
+  }
+
+  .article-body ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--rule);
+    font-size: 0.8rem;
+  }
+
+  .article-body ol {
+    counter-reset: ol-counter;
+  }
+  .article-body ol li {
+    counter-increment: ol-counter;
+  }
+  .article-body ol li::before {
+    content: counter(ol-counter) '.';
+    position: absolute;
+    left: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+  }
+
+  .callout {
+    background: var(--paper-warm);
+    border-left: 3px solid var(--accent);
+    padding: 1.2rem 1.5rem;
+    margin: 1.8rem 0;
+    font-size: 0.9rem;
+    color: var(--ink-light);
+    line-height: 1.8;
+  }
+
+  .callout strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ── FRAMEWORK BOX ── */
+  .framework-box {
+    border: 1px solid var(--rule);
+    margin: 2rem 0;
+    overflow: hidden;
+  }
+
+  .framework-box-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: var(--paper-warm);
+    padding: 0.8rem 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .framework-steps {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .framework-step {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.2rem;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--paper-warm);
+    align-items: start;
+  }
+
+  .framework-step:last-child { border-bottom: none; }
+
+  .framework-step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    font-weight: 500;
+    padding-top: 0.15rem;
+  }
+
+  .framework-step-content strong {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .framework-step-content span {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    line-height: 1.7;
+  }
+
+  /* ── OUTCOMES BOX ── */
+  .outcomes-box {
+    border: 1px solid var(--rule);
+    padding: 1.8rem;
+    margin: 2rem 0;
+    background: var(--paper);
+  }
+
+  .outcomes-box h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .outcome-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--paper-warm);
+    font-size: 0.88rem;
+  }
+
+  .outcome-row:last-child { border-bottom: none; }
+
+  .outcome-figure {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ink);
+    min-width: 6rem;
+    white-space: nowrap;
+  }
+
+  .outcome-desc { color: var(--ink-light); }
+
+  /* ── ARTICLE FOOTER ── */
+  .article-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .back-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .author-sig {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── PAGE FOOTER ── */
+  footer {
+    padding: 1.5rem 3rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .article-wrapper { padding: 7rem 1.5rem 4rem; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="../index.html" class="nav-logo">QHY · Portfolio 2026</a>
+  <a href="../articles.html" class="nav-back">← 返回文章列表</a>
+</nav>
+
+<!-- ARTICLE -->
+<div class="article-wrapper">
+
+  <header class="article-header">
+    <div class="article-eyebrow">
+      <span class="article-eyebrow-tag">调研方法论</span>
+      <span class="article-eyebrow-date">2026年1月</span>
+    </div>
+    <h1 class="article-h1">结构化调研：如何在五家企业的走访中提炼出行业洞察</h1>
+    <p class="article-lead">
+      做调研最难的不是收集信息，而是提问。在启动 AI+教育赛道调研之前，我花了整整两天时间做一件很多人会跳过的事：定义赛道边界。这个行业是什么？不是什么？谁是典型玩家，谁只是蹭概念的？只有把这些问题想清楚，后续五家企业的深度走访才能真正问到点子上。
+    </p>
+  </header>
+
+  <div class="article-body">
+
+    <h2>为什么要先定义赛道</h2>
+
+    <p>
+      这个调研项目的起点，是一个相当模糊的任务：了解 AI+教育赛道，看看园区可以怎么介入。"AI+教育"这个词太大了——大到几乎可以把任何跟人工智能沾边、跟教育有关系的产品都塞进去。
+    </p>
+
+    <p>
+      如果不先做赛道定义，走访五家企业可能得到五套完全不同的行业叙事，彼此之间无法比较，也无法汇总。所以在动身之前，我做了一件看起来很耗时、但实际上省去了大量后期整合成本的事：<strong>划定调研边界</strong>。
+    </p>
+
+    <div class="callout">
+      <strong>赛道定义的三个问题：</strong><br>
+      1. 这个赛道的核心价值主张是什么？（技术驱动 vs 内容驱动）<br>
+      2. 谁是典型玩家，谁只是边缘参与者？<br>
+      3. 哪些公司虽然用了"AI+教育"的标签，但实质上解决的是完全不同的问题？
+    </div>
+
+    <p>
+      通过这三个问题的梳理，我最终把调研范围锁定在：<strong>以 AI 技术为核心驱动力、面向 K12 或职业教育场景、具备规模化产品逻辑的企业</strong>。这排除了大量只是在传统教育产品里加了一个 AI 客服的公司。
+    </p>
+
+    <h2>访谈提纲的设计逻辑</h2>
+
+    <p>
+      访谈提纲是结构化调研最重要的工具。一份好的提纲不是问题清单，而是一套信息收集框架——它要保证无论面对什么类型的企业，都能稳定产出可比较的数据点。
+    </p>
+
+    <p>
+      我设计的提纲围绕四个维度展开：
+    </p>
+
+    <div class="framework-box">
+      <div class="framework-box-header">访谈框架 · 四维模型</div>
+      <div class="framework-steps">
+        <div class="framework-step">
+          <span class="framework-step-num">01</span>
+          <div class="framework-step-content">
+            <strong>企业画像</strong>
+            <span>成立时间、团队规模、融资阶段、核心产品形态——建立基准，方便后续横向比较</span>
+          </div>
+        </div>
+        <div class="framework-step">
+          <span class="framework-step-num">02</span>
+          <div class="framework-step-content">
+            <strong>产品逻辑</strong>
+            <span>核心技术路径是什么？AI 在产品中扮演什么角色（工具 / 引擎 / 卖点）？变现模式如何？</span>
+          </div>
+        </div>
+        <div class="framework-step">
+          <span class="framework-step-num">03</span>
+          <div class="framework-step-content">
+            <strong>增长瓶颈</strong>
+            <span>目前最大的增长障碍是什么？是获客、技术、政策还是数据？愿不愿意讲实话？</span>
+          </div>
+        </div>
+        <div class="framework-step">
+          <span class="framework-step-num">04</span>
+          <div class="framework-step-content">
+            <strong>对外部支持的期待</strong>
+            <span>如果园区能提供资源，最需要的是什么？——这是设计服务方案的关键输入</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      设计这套框架有一个反直觉的原则：<strong>不要问"你们有什么问题"，要问"你们在某个具体场景下是怎么做的"</strong>。直接问痛点往往得到套话；问具体操作流程，痛点会自己暴露出来。
+    </p>
+
+    <h2>五家企业，三个核心痛点</h2>
+
+    <p>
+      走访结束后，我对五家企业的录音做了完整整理，然后进行需求建模。这个过程不是简单地把受访者说的话汇总——而是要<strong>识别哪些是个体抱怨，哪些是结构性问题</strong>。
+    </p>
+
+    <p>
+      最终，我从这些走访中提炼出了三个反复出现的行业核心问题：
+    </p>
+
+    <ul>
+      <li><strong>技术变现难：</strong>不少企业有技术能力，但找不到稳定的商业化路径。AI 技术在教育场景下很难让客户直接感知到价值，导致销售周期长、客单价低。</li>
+      <li><strong>规模增长受限：</strong>产品依赖重度定制，难以实现标准化复制。从一个学校扩张到一百个学校，成本几乎线性增长，规模效应无法出现。</li>
+      <li><strong>数据资产沉睡：</strong>企业积累了大量学生行为数据，但数据分散、质量参差不齐，无法形成可用于模型训练或产品迭代的有效资产。</li>
+    </ul>
+
+    <h2>从洞察到行动方案</h2>
+
+    <p>
+      调研报告的最后一部分，是我设计的「资源—能力—政策」三维服务方案，针对上述三个核心痛点，分别提出了园区可以提供的支持路径：
+    </p>
+
+    <ul>
+      <li><strong>资源维度：</strong>搭建园区内企业之间的需求对接机制，让技术型企业和内容型企业形成互补</li>
+      <li><strong>能力维度：</strong>引入产品化培训资源，帮助企业将定制化解决方案拆解为可复用的标准模块</li>
+      <li><strong>政策维度：</strong>梳理省市层面的教育科技扶持政策，降低企业政策获取的信息成本</li>
+    </ul>
+
+    <p>
+      这套方案被集团采纳，推动了后续 <strong>AI+教育供需对接会</strong> 的落地，活动吸引了近 100 名来自高校和企业的参与者。
+    </p>
+
+    <div class="outcomes-box">
+      <h3>项目成果</h3>
+      <div class="outcome-row">
+        <span class="outcome-figure">被采纳</span>
+        <span class="outcome-desc">核心建议获集团采纳，直接推动供需对接会的立项与落地</span>
+      </div>
+      <div class="outcome-row">
+        <span class="outcome-figure">近 100 人</span>
+        <span class="outcome-desc">AI+教育供需对接会，高校与企业代表双边参与</span>
+      </div>
+      <div class="outcome-row">
+        <span class="outcome-figure">5 家</span>
+        <span class="outcome-desc">代表性企业完成深度走访，覆盖 K12、职业教育、企业培训多个子赛道</span>
+      </div>
+      <div class="outcome-row">
+        <span class="outcome-figure">3 大</span>
+        <span class="outcome-desc">识别行业核心痛点，形成「资源—能力—政策」三维服务框架</span>
+      </div>
+    </div>
+
+    <h2>结构化调研的核心原则</h2>
+
+    <p>
+      回过头来看这次调研，我提炼出了三个我认为最重要的方法论原则：
+    </p>
+
+    <ol>
+      <li>
+        <strong>先定义，再出发。</strong> 无论任务多紧迫，花时间定义赛道边界和调研框架都是值得的。这个前期投入会以"后期整合成本大幅下降"的方式回报你。
+      </li>
+      <li>
+        <strong>问流程，不问痛点。</strong> 直接问痛点往往得到经过包装的答案。问"你们是怎么做 X 的"，痛点会自己从流程描述里暴露出来，且更真实。
+      </li>
+      <li>
+        <strong>区分个体抱怨和结构性问题。</strong> 一家企业说"融资难"可能是个体情况；五家企业都说"技术变现难"，这才是值得写进报告的行业信号。结构化调研的价值，就在于识别这个差异。
+      </li>
+    </ol>
+
+    <div class="article-footer">
+      <a href="../articles.html" class="back-link">← 返回文章列表</a>
+      <span class="author-sig">覃宏宇 · Quinn · 2026</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>覃宏宇 · Quinn Qin · 2026</p>
+  <p>Jimei University Chengyi College · Public Finance</p>
+</footer>
+
+</body>
+</html>

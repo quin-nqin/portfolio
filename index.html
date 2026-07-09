@@ -133,8 +133,6 @@
     padding: 6rem 6vw 5rem;
     position: relative;
     z-index: 1;
-    overflow-y: auto;
-    max-height: 100%;
   }
 
   .hero-watermark {
@@ -249,7 +247,6 @@
     width: 100%;
     margin: 0 auto;
     padding: 6rem 6vw 5rem;
-    max-height: 100%;
     overflow: hidden;
   }
 
@@ -286,7 +283,10 @@
   }
   .is-dark .spine-label { color: var(--gold-soft); }
 
-  .panel-content { min-width: 0; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; max-height: 100%; }
+  .panel-content { min-width: 0; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeUp 0.8s cubic-bezier(0.22, 0.8, 0.28, 1) both; }
 
   @media (max-width: 900px) {
     .panel-grid { grid-template-columns: 1fr; padding: 5.5rem 6vw 6.5rem; }
@@ -327,6 +327,17 @@
 
   @media (max-width: 640px) {
     .mini-swipe.cols-2, .mini-swipe.cols-3, .mini-swipe.cols-4 { grid-template-columns: 1fr; }
+    .panel-grid { padding: 4.5rem 5vw 5.5rem; gap: 1.6rem; }
+    .hero-shell { padding: 4.5rem 6vw 5.5rem; }
+    .panel-title { margin-bottom: 1rem; }
+    .panel-lede { margin-bottom: 1.4rem; }
+    .hero-cta { margin-bottom: 1.6rem; }
+    .about-card { padding: 1.3rem; }
+    .about-card p { line-height: 1.65; }
+    .about-card p + p { margin-top: 0.75rem; }
+    .meta-row { padding: 0.55rem 0; }
+    .tool-tags-row { margin-top: 1.3rem; gap: 1rem 1.6rem; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
   }
 
   .swipe-hint {
@@ -781,6 +792,16 @@
     document.title = (sectionNums[current] ? sectionNums[current] + ' · ' + labels[current] : labels[current]) + ' — 覃宏宇 · Quinn';
   }
 
+  function playEnter(i) {
+    var p = document.querySelector('.panel[data-index="' + i + '"]');
+    if (!p) return;
+    var el = p.querySelector('.hero-shell, .panel-content');
+    if (!el) return;
+    el.classList.remove('fade-in');
+    void el.offsetWidth; // force reflow so the animation restarts every time
+    el.classList.add('fade-in');
+  }
+
   function go(i) {
     if (modalOpen) return;
     i = Math.max(0, Math.min(panels.length - 1, i));
@@ -788,6 +809,7 @@
     current = i;
     animating = true;
     render();
+    playEnter(current);
     setTimeout(function () { animating = false; }, 620);
   }
 
@@ -921,6 +943,7 @@
   });
 
   render();
+  playEnter(current);
 })();
 </script>
 </body>
